@@ -1,0 +1,20 @@
+{
+  "name": "cybernotes",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A lightweight, GitHub Pages friendly cybersecurity knowledge base built from Markdown notes.",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "dev": "node tools/serve.mjs",
+    "serve": "node tools/build.mjs && node tools/serve.mjs",
+    "preview": "node tools/build.mjs && node tools/serve.mjs",
+    "clean": "node tools/clean.mjs",
+    "check": "node tools/build.mjs && node tools/check.mjs"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

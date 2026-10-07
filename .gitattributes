@@ -1,0 +1,17 @@
+# Store every text file with LF in the repository, whatever the working copy
+# uses. Notes, CSS, JS and the build scripts then behave identically on Windows,
+# macOS and the GitHub Actions runner.
+* text=auto eol=lf
+
+# Raster and container formats git must never line-ending convert.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.pcap binary
+*.woff2 binary

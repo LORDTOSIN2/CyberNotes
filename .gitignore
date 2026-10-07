@@ -1,0 +1,28 @@
+# Build output (regenerated on every build / deploy)
+dist/
+
+# Tool / editor scratch directories that must never be published
+.zwork/
+.shots/
+.tmp-*
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*~
+
+# Local env
+.env
+.env.local

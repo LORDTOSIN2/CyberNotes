@@ -1,0 +1,22 @@
+{
+  "title": "CyberNotes",
+  "tagline": "Field notes from authorized security practice",
+  "description": "A personal cybersecurity knowledge base: recon, enumeration, web exploitation, Linux, networking, CTF writeups and defense notes — searchable, tagged and version controlled in Git.",
+  "author": "LORDTOSIN2",
+  "lang": "en",
+  "url": "https://lordtosin2.github.io/CyberNotes",
+  "basePath": "",
+  "repo": "https://github.com/LORDTOSIN2/CyberNotes",
+  "nav": [
+    { "label": "Notes", "href": "/notes/" },
+    { "label": "Tags", "href": "/tags/" },
+    { "label": "Search", "href": "/search/" },
+    { "label": "About", "href": "/about/" }
+  ],
+  "social": [
+    { "label": "GitHub", "href": "https://github.com/LORDTOSIN2/CyberNotes" },
+    { "label": "RSS", "href": "/feed.xml" }
+  ],
+  "homeIntro": "A working notebook for authorized security practice: lab setups, recon and enumeration tradecraft, web exploitation, Linux internals, CTF writeups and the defensive countermeasures that follow. Every note is a Markdown file in this repository — adding one is a single commit.",
+  "authorizationNote": "Everything documented here was performed only against systems I own, intentionally vulnerable lab targets, or platforms whose terms of service permit the activity (TryHackMe, Hack The Box, WebGoat, DVWA, OWASP Juice Shop, PortSwigger Web Security Academy). No unauthorized access, no real-world targets, no third-party data."
+}
