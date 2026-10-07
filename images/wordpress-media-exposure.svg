@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 430" role="img" aria-labelledby="title desc">
+  <title id="title">Two paths to the same public uploads: directory listing and the REST media route</title>
+  <desc id="desc">An unauthenticated visitor reaches the files in wp-content/uploads either by requesting a date folder with directory listing enabled, or by paging through the public REST media collection and reading source_url values. Both converge on the same downloadable files.</desc>
+  <style>
+    .bg { fill: #0e141a; }
+    .box { fill: #121a21; stroke: #22303c; }
+    .box-open { fill: #121a21; stroke: #ff7a70; }
+    .box-fix { fill: #121a21; stroke: #5ad1a0; }
+    .h { fill: #dde6ed; font: 700 13.5px "Inter", Segoe UI, sans-serif; }
+    .b { fill: #8697a6; font: 400 12px "Inter", Segoe UI, sans-serif; }
+    .m { fill: #ffd479; font: 500 11.5px "JetBrains Mono", Consolas, monospace; }
+    .g { fill: #7ee0c0; font: 500 11.5px "JetBrains Mono", Consolas, monospace; }
+    .r { fill: #ff7a70; font: 600 11.5px "JetBrains Mono", Consolas, monospace; }
+    .k { fill: #5ad1a0; font: 600 11.5px "JetBrains Mono", Consolas, monospace; }
+    .label { fill: #8697a6; font: 600 12px "JetBrains Mono", Consolas, monospace; }
+    .arrow { stroke: #2e4050; stroke-width: 2; fill: none; }
+    .arrow-hot { stroke: #ff7a70; stroke-width: 2; fill: none; }
+    .arrow-ok { stroke: #5ad1a0; stroke-width: 2; fill: none; }
+    .num { fill: #0a0e12; font: 700 11px "JetBrains Mono", Consolas, monospace; }
+  </style>
+  <rect class="bg" width="920" height="430" rx="12"/>
+  <text class="label" x="30" y="30">reference diagram — illustrating the concept</text>
+
+  <defs>
+    <marker id="ah" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#ff7a70"/>
+    </marker>
+    <marker id="ag" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#5ad1a0"/>
+    </marker>
+    <marker id="an" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#2e4050"/>
+    </marker>
+  </defs>
+
+  <!-- attacker -->
+  <rect class="box" x="30" y="150" width="176" height="96" rx="10"/>
+  <text class="h" x="52" y="180">Unauthenticated</text>
+  <text class="h" x="52" y="198">visitor / scraper</text>
+  <text class="b" x="52" y="222">no account, no token</text>
+  <text class="b" x="52" y="240">plain curl is enough</text>
+
+  <path class="arrow" d="M206 176 H286" marker-end="url(#an)"/>
+  <path class="arrow" d="M206 222 H286" marker-end="url(#an)"/>
+
+  <!-- path 1 -->
+  <rect class="box-open" x="290" y="76" width="286" height="112" rx="10"/>
+  <text class="r" x="310" y="102">Path 1 — directory listing</text>
+  <text class="m" x="310" y="126">GET /wp-content/uploads/2026/09/</text>
+  <text class="b" x="310" y="150">With auto-indexing on, the server</text>
+  <text class="b" x="310" y="168">generates a browsable file listing.</text>
+
+  <!-- path 2 -->
+  <rect class="box-open" x="290" y="208" width="286" height="130" rx="10"/>
+  <text class="r" x="310" y="234">Path 2 — public REST media route</text>
+  <text class="m" x="310" y="258">GET /wp-json/wp/v2/media?per_page=100</text>
+  <text class="b" x="310" y="282">Readable anonymously. Iterate page=1,2,3…</text>
+  <text class="b" x="310" y="300">Each item includes source_url — the exact</text>
+  <text class="b" x="318" y="318">file path. X-WP-Total reveals the total count.</text>
+
+  <path class="arrow-hot" d="M576 132 H656" marker-end="url(#ah)"/>
+  <path class="arrow-hot" d="M576 272 H656" marker-end="url(#ah)"/>
+
+  <!-- convergence -->
+  <rect class="box-open" x="660" y="150" width="230" height="112" rx="10"/>
+  <text class="h" x="682" y="178">Same public files</text>
+  <text class="b" x="682" y="202">Direct URLs are hotlinkable</text>
+  <text class="b" x="682" y="220">and downloadable at scale.</text>
+  <text class="b" x="682" y="244">No auth, no rate limit.</text>
+
+  <!-- mitigations -->
+  <text class="label" x="30" y="378">Closing it (both locks, not one):</text>
+  <text class="k" x="30" y="400">Options -Indexes / autoindex off</text>
+  <text class="b" x="242" y="400">+</text>
+  <text class="k" x="264" y="400">require auth on /wp/v2/media</text>
+  <text class="b" x="466" y="400">+</text>
+  <text class="k" x="488" y="400">WAF rate limiting, signed URLs, audit uploads</text>
+  <text class="b" x="30" y="420">Hotlink protection via Referer is hygiene only — it is spoofable and absent from plain curl.</text>
+</svg>

@@ -513,14 +513,20 @@ export function renderInline(input, ctx, nested = false) {
   text = text.replace(new RegExp(`${PH}BR${PH}`, 'g'), '<br />');
 
   // Emphasis family (order matters: strong before em).
+  //
+  // The inner patterns allow `\n` on purpose: a paragraph's source line breaks
+  // are whitespace, not boundaries, so `**bold across\nlines**` must close on the
+  // second line. The trade-off is that an unclosed `**` runs to the end of the
+  // paragraph, which renders literally rather than swallowing the next block.
   text = text
-    .replace(/\*\*\*([^*\n]+)\*\*\*/g, '<strong><em>$1</em></strong>')
-    .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
-    .replace(/(^|[\s(（])__([^_\n]+)__/g, '$1<strong>$2</strong>')
-    .replace(/(^|[^*\w])\*([^*\n]+)\*/g, '$1<em>$2</em>')
-    .replace(/(^|[\s(（])_([^_\n]+)_(?=[\s).,;:!?）]|$)/g, '$1<em>$2</em>')
-    .replace(/~~([^~\n]+)~~/g, '<del>$1</del>')
-    .replace(/==([^=\n]+)==/g, '<mark>$1</mark>');
+    .replace(/\*\*\*([\s\S]+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+    .replace(/\*\*([\s\S]+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|[\s(（])__([\s\S]+?)__(?=[\s).,;:!?）]|$)/g, '$1<strong>$2</strong>')
+    .replace(/(^|[^*\w])\*([^*\n]+?)\*/g, '$1<em>$2</em>')
+    .replace(/(^|[\s(（])_([^_\n]+?)_(?=[\s).,;:!?）]|$)/g, '$1<em>$2</em>')
+    .replace(/~~([\s\S]+?)~~/g, '<del>$1</del>');
+  // `==highlight==` stays single-line so it cannot be confused with setext rules.
+  text = text.replace(/==([^=\n]+)==/g, '<mark>$1</mark>');
 
   // Hashtags -> tag links. Skip placeholders, headings already handled, and
   // purely numeric references such as `#1` or `C#`.
@@ -536,8 +542,9 @@ export function renderInline(input, ctx, nested = false) {
     return `${lead}<a class="tag-inline" href="${escapeAttr(href)}">#${escapeHtml(label)}</a>`;
   });
 
-  // Restore placeholders.
-  return text.replace(new RegExp(`${PH}(\\d+)${PH}`, 'g'), (_, index) => store[Number(index)] ?? '');
+  // Restore placeholders. `(?!\d)` stops a following newline (turned into
+  // `<br />` above) from being read as part of the sentinel's numeric index.
+  return text.replace(new RegExp(`${PH}(\\d+)${PH}(?!\\d)`, 'g'), (_, index) => store[Number(index)] ?? '');
 }
 
 /** Allowlist-based sanitiser for raw HTML found in notes. */
@@ -565,6 +572,21 @@ export function sanitizeTag(tag) {
   return `<${name}${attrs.length ? ` ${attrs.join(' ')}` : ''}${selfClosing ? ' /' : ''}>`;
 }
 
+/**
+ * Reduce rendered inline HTML to plain text, for the table of contents.
+ *
+ * Entities are decoded as well as tags removed: the label is later passed through
+ * `escapeHtml` again when the page is written, so leaving `&quot;` in place would
+ * surface as `&amp;quot;` in the sidebar.
+ */
 export function stripTags(html) {
-  return String(html ?? '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  return String(html ?? '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, '&')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
