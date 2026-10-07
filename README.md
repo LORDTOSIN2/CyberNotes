@@ -1,5 +1,7 @@
 # CyberNotes
 
+**Live site:** <https://lordtosin2.github.io/CyberNotes/>
+
 A lightweight, GitHub Pages–hosted cybersecurity knowledge base. Every note is a
 Markdown file in `notes/`; a zero-dependency Node script turns the folder into a
 searchable, tag-filtered, dark/light static site. Adding a note is a `git push`
